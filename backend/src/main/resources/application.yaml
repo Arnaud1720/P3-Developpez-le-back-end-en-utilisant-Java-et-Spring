@@ -1,0 +1,39 @@
+# src/main/resources/application.yml
+
+# 1) Configuration de l’application et de la base de données
+spring:
+  application:
+    name: ChaTop
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/chatop_db
+    username: chatop_user
+    password: chatop_password
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+
+  jpa:
+    hibernate:
+      ddl-auto: validate     # ou "update" / "none"
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+# 2) Port de l’application
+server:
+  port: 8081
+
+# 3) Configuration Springdoc / Swagger UI
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: alpha
+    tagsSorter: alpha
+    display-request-duration: true
+
