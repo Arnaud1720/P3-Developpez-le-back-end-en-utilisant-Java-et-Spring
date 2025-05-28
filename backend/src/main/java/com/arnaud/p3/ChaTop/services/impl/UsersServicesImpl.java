@@ -9,34 +9,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+
 @Service
 @Transactional
-public class usersServicesImpl implements UsersServices {
+public class UsersServicesImpl implements UsersServices {
 
     private final UsersRepository usersRepository;
     private final UserMapper userMapper;
 
     @Autowired
-    public usersServicesImpl(UsersRepository usersRepository, UserMapper userMapper) {
+    public UsersServicesImpl(UsersRepository usersRepository, UserMapper userMapper) {
         this.usersRepository = usersRepository;
         this.userMapper = userMapper;
     }
 
     @Override
     public UsersDto save(UsersDto usersDto) {
-        // 1. Convertir le DTO en entité
-        Users entity = userMapper.toEntity(usersDto);  // <> usersDto et non UsersDto !
+      // 1. Convertir le DTO en entité
+      Users entity = userMapper.toEntity(usersDto);
 
-        // 2. Sauvegarder en base
-        Users saved = usersRepository.save(entity);
+      // 2. Initialiser les dates sur l’entité
+      LocalDateTime now = LocalDateTime.now();
+      entity.setUpdatedAt(now);
 
-        // 3. Retourner un DTO « rafraîchi »
-        return userMapper.toDTO(saved);
+      if (entity.getId() == null) {
+        entity.setCreatedAt(now);
+      }
+      // 3. Sauvegarder en base
+      Users saved = usersRepository.save(entity);
+
+      // 4. Retourner un DTO « rafraîchi »
+      return userMapper.toDTO(saved);
     }
 
     @Override
-    public UsersDto findByUsername(String username) {
-        return null;
+    public UsersDto findByName(String name) {
+      Users users = usersRepository.findByName(name).orElseThrow(
+        () -> new RuntimeException("User with name " + name + " not found")
+      );
+      return userMapper.toDTO(users);
     }
 
     @Override
@@ -52,4 +64,9 @@ public class usersServicesImpl implements UsersServices {
         Users users = usersRepository.findById(id).orElse(null);
         return userMapper.toDTO(users);
     }
+
+  @Override
+  public void deleteById(int id) {
+    usersRepository.deleteById(id);
+  }
 }
