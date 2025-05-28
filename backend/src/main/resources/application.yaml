@@ -16,7 +16,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: validate     # ou "update" / "none"
+      ddl-auto: update     # ou "update" / "none"
     properties:
       hibernate:
         show_sql: true
