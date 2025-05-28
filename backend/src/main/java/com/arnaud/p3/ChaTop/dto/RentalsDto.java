@@ -2,6 +2,8 @@ package com.arnaud.p3.ChaTop.dto;
 
 import com.arnaud.p3.ChaTop.entity.Message;
 import com.arnaud.p3.ChaTop.entity.Users;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,8 +15,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RentalDto {
-
+@JsonIgnoreProperties({ "owner", "messages" })
+public class RentalsDto {
+    @JsonIgnore
     private Integer id;
 
     private String name;
@@ -26,4 +29,6 @@ public class RentalDto {
     private LocalDateTime updatedAt;
     private Users owner;
     private List<Message> messages;
+
+
 }

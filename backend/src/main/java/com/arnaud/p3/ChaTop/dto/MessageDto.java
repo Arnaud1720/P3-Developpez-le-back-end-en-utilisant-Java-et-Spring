@@ -1,8 +1,7 @@
 package com.arnaud.p3.ChaTop.dto;
 
-import com.arnaud.p3.ChaTop.entity.Rental;
+import com.arnaud.p3.ChaTop.entity.Rentals;
 import com.arnaud.p3.ChaTop.entity.Users;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,5 +22,5 @@ public class MessageDto {
 
     private Users user;
 
-    private Rental rental;
+    private Rentals rentals;
 }
