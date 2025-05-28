@@ -33,5 +33,6 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "rental_id")
-    private Rental rental;
+    private Rentals rentals;
+
 }

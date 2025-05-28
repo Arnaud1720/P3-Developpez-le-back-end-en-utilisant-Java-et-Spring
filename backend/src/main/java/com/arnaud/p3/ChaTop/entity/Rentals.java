@@ -1,5 +1,6 @@
 package com.arnaud.p3.ChaTop.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +15,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Rental {
+public class Rentals {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -37,8 +38,11 @@ public class Rental {
     // Relations
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
+    @JsonIgnore
     private Users owner;
 
-    @OneToMany(mappedBy = "rental")
-    private List<Message> messages;
+    @JsonIgnore
+  @OneToMany(mappedBy = "rentals")
+
+  private List<Message> messages;
 }
