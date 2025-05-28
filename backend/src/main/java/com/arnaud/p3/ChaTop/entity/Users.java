@@ -30,8 +30,9 @@ public class Users {
 
     // Relations
     @OneToMany(mappedBy = "owner")
-    private List<Rental> rentals;
+    private List<Rentals> rentals;
 
     @OneToMany(mappedBy = "user")
     private List<Message> messages;
+     
 }
