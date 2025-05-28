@@ -1,16 +1,18 @@
 package com.arnaud.p3.ChaTop.mapper;
 
+import com.arnaud.p3.ChaTop.dto.RentalsDto;
 import com.arnaud.p3.ChaTop.dto.UsersDto;
+import com.arnaud.p3.ChaTop.entity.Rentals;
 import com.arnaud.p3.ChaTop.entity.Users;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface UserMapper {
+public interface RentalsMapper {
 
-    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+    RentalsMapper INSTANCE = Mappers.getMapper(RentalsMapper.class);
 
-    UsersDto toDTO(Users user);
+    RentalsDto toDTO(Rentals rentals);
 
-    Users toEntity(UsersDto userDTO);
+    Rentals toEntity(RentalsDto rentalsDto);
 }
