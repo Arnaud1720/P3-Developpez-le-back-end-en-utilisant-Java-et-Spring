@@ -34,5 +34,5 @@ public class Users {
 
     @OneToMany(mappedBy = "user")
     private List<Message> messages;
-     
+
 }
