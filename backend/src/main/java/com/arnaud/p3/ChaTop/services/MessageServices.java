@@ -1,3 +1,8 @@
 package com.arnaud.p3.ChaTop.services;
 
-public interface MessageServices { }
+import com.arnaud.p3.ChaTop.dto.MessageDto;
+
+public interface MessageServices {
+  void save(MessageDto messageDto);
+
+}

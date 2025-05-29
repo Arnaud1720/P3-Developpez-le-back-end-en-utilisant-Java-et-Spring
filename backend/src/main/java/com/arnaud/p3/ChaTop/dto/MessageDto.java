@@ -20,7 +20,7 @@ public class MessageDto {
 
     private LocalDateTime updatedAt;
 
-    private Users user;
+    private Integer userId;
 
-    private Rentals rentals;
+    private Integer rentalsId;
 }
