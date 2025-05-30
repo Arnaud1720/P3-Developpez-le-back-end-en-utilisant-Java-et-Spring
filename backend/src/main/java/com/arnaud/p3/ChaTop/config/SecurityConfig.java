@@ -1,2 +1,54 @@
-package com.arnaud.p3.ChaTop.config;public class SecurityConfig {
+package com.arnaud.p3.ChaTop.config;
+
+import com.arnaud.p3.ChaTop.auth.AuthEntryPointJwt;
+import com.arnaud.p3.ChaTop.auth.AuthTokenFilter;
+import com.arnaud.p3.ChaTop.utils.UserDetailsServiceImpl;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+@Configuration
+@EnableMethodSecurity
+@RequiredArgsConstructor
+public class SecurityConfig {
+
+  private final AuthEntryPointJwt unauthorizedHandler;
+  private final UserDetailsServiceImpl userDetailsService;
+  private final AuthTokenFilter authTokenFilter;
+
+  @Bean
+  public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
+    return cfg.getAuthenticationManager();
+  }
+
+  @Bean
+  public PasswordEncoder passwordEncoder() {
+    return new BCryptPasswordEncoder();
+  }
+
+  @Bean
+  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    http
+      .csrf(AbstractHttpConfigurer::disable)
+      .exceptionHandling(e -> e.authenticationEntryPoint(unauthorizedHandler))
+      .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+      .authorizeHttpRequests(auth -> auth
+        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/api/users").permitAll()
+        .anyRequest().authenticated()
+      )
+      .authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
+      .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
+
+    return http.build();
+  }
 }
