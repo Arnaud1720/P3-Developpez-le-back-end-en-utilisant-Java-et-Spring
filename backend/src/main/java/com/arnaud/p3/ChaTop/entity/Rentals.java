@@ -38,11 +38,7 @@ public class Rentals {
     // Relations
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
-    @JsonIgnore
     private Users owner;
-
-    @JsonIgnore
-  @OneToMany(mappedBy = "rentals")
-
+    @OneToMany(mappedBy = "rentals")
   private List<Message> messages;
 }

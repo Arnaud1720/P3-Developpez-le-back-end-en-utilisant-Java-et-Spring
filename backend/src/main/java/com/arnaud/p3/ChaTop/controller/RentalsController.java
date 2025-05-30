@@ -11,9 +11,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/rentals")
+
 public class RentalsController {
   private final RentalServices service;
 
@@ -22,10 +25,9 @@ public class RentalsController {
   }
 
   @PostMapping("/save")
-  public ResponseEntity<RentalsDto> createRental(
+  public ResponseEntity<Map<String,Object>> createRental(
     @RequestBody @Valid RentalsDto dto
   ) {
-    // Le dto doit contenir dto.getOwnerId()
     RentalsDto created = service.saveRental(dto);
 
     URI location = ServletUriComponentsBuilder
@@ -34,9 +36,13 @@ public class RentalsController {
       .buildAndExpand(created.getId())
       .toUri();
 
+    Map<String,Object> body = new HashMap<>();
+    body.put("message", "Rental created !");
+    body.put("rental", created);
+
     return ResponseEntity
       .created(location)
-      .body(created);
+      .body(body);
   }
 
   // Optionnel : récupérer toutes les locations

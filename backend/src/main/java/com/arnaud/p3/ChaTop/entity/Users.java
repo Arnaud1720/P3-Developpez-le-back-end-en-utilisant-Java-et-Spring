@@ -6,7 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 @Data
@@ -17,9 +20,11 @@ public class Users {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
-
+    @Column(name = "email")
     private String email;
+    @Column(name = "name")
     private String name;
+    @Column(name = "password")
     private String password;
 
     @Column(name = "created_at")
@@ -35,4 +40,11 @@ public class Users {
     @OneToMany(mappedBy = "user")
     private List<Message> messages;
 
+  @ManyToMany(fetch = FetchType.EAGER)
+  @JoinTable(
+    name = "user_roles",
+    joinColumns = @JoinColumn(name = "user_id"),
+    inverseJoinColumns = @JoinColumn(name = "role_id")
+  )
+  private Set<Role> roles = new HashSet<>();
 }

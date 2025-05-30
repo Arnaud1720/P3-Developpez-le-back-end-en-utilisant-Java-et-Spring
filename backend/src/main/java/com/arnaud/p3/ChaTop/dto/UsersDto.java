@@ -30,4 +30,5 @@ public class UsersDto {
   @Schema(description = "Date de mise à jour", accessMode = Schema.AccessMode.READ_ONLY)
   private LocalDateTime updatedAt;
 
+
 }

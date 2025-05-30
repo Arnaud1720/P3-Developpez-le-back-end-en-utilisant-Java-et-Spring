@@ -6,10 +6,12 @@ import com.arnaud.p3.ChaTop.mapper.UserMapper;
 import com.arnaud.p3.ChaTop.repository.UsersRepository;
 import com.arnaud.p3.ChaTop.services.UsersServices;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -17,11 +19,12 @@ public class UsersServicesImpl implements UsersServices {
 
     private final UsersRepository usersRepository;
     private final UserMapper userMapper;
-
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
     @Autowired
-    public UsersServicesImpl(UsersRepository usersRepository, UserMapper userMapper) {
+    public UsersServicesImpl(UsersRepository usersRepository, UserMapper userMapper, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.usersRepository = usersRepository;
         this.userMapper = userMapper;
+      this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
@@ -37,6 +40,7 @@ public class UsersServicesImpl implements UsersServices {
         entity.setCreatedAt(now);
       }
       // 3. Sauvegarder en base
+      entity.setPassword(bCryptPasswordEncoder.encode(usersDto.getPassword()));
       Users saved = usersRepository.save(entity);
 
       // 4. Retourner un DTO « rafraîchi »
@@ -68,5 +72,20 @@ public class UsersServicesImpl implements UsersServices {
   @Override
   public void deleteById(int id) {
     usersRepository.deleteById(id);
+  }
+
+  @Override
+  public Optional<Users> findByNameOrEmail(String name, String email) {
+    return Optional.empty();
+  }
+
+  @Override
+  public boolean existsByEmail(String email) {
+    return false;
+  }
+
+  @Override
+  public boolean existsByName(String name) {
+    return false;
   }
 }

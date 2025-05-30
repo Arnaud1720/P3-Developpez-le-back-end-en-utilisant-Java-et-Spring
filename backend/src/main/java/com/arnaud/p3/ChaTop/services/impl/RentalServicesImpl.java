@@ -37,7 +37,7 @@ public class RentalServicesImpl implements RentalServices {
     Rentals rental = rentalsMapper.toEntity(rentalsDto);
 
     // 2. Associer le propriétaire (sinon EntityNotFoundException)
-    Integer ownerId = rentalsDto.getOwner().getId();
+    Integer ownerId = rentalsDto.getOwnerId();
     Users owner = usersRepository.findById(ownerId)
       .orElseThrow(() -> new EntityNotFoundException("Owner not found for id " + ownerId));
     rental.setOwner(owner);
@@ -90,7 +90,7 @@ public class RentalServicesImpl implements RentalServices {
     rental.setDescription(dto.getDescription());
 
     // Si vous passez aussi l’owner dans le DTO :
-    if (dto.getOwnerId() != null) {
+    if (dto.getId() != null) {
       Users owner = usersRepository.findById(dto.getOwnerId())
         .orElseThrow(() -> new EntityNotFoundException("User not found for id " + dto.getOwnerId()));
       rental.setOwner(owner);
