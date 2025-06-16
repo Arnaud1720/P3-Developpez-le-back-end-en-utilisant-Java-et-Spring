@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mon-image-chatop
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL:      jdbc:mysql://db:3306/chatop_db?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_USERNAME: chatop_user
+      SPRING_DATASOURCE_PASSWORD: chatop_password
+      SERVER_PORT:                "8081"
+    depends_on:
+      - db
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE:      chatop_db
+      MYSQL_USER:          chatop_user
+      MYSQL_PASSWORD:      chatop_password
+      MYSQL_ROOT_PASSWORD: root_pwd
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    depends_on:
+      - db
+    environment:
+      PMA_HOST:     db
+      PMA_USER:     chatop_user
+      PMA_PASSWORD: chatop_password
+    ports:
+      - "8082:80"
+
+volumes:
+  mysql_data:
