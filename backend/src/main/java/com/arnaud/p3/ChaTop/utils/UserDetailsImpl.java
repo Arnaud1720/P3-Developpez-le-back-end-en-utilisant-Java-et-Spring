@@ -23,7 +23,7 @@ public class UserDetailsImpl implements UserDetails {
       user.getEmail(),
       user.getPassword(),
       user.getRoles().stream()
-        .map(r -> (GrantedAuthority) () -> r.getName())
+        .map(r -> (GrantedAuthority) r::getName)
         .toList()
     );
   }

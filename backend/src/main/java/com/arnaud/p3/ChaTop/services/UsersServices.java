@@ -11,7 +11,5 @@ public interface UsersServices {
     UsersDto findByEmail(String email);
     UsersDto findById(int id);
     void deleteById(int id);
-    Optional<Users> findByNameOrEmail(String name, String email);
-    boolean existsByEmail(String email);
-    boolean existsByName(String name);
+    UsersDto update(UsersDto usersDto);
 }

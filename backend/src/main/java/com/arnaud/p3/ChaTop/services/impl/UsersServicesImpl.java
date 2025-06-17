@@ -5,6 +5,7 @@ import com.arnaud.p3.ChaTop.entity.Users;
 import com.arnaud.p3.ChaTop.mapper.UserMapper;
 import com.arnaud.p3.ChaTop.repository.UsersRepository;
 import com.arnaud.p3.ChaTop.services.UsersServices;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -75,17 +76,22 @@ public class UsersServicesImpl implements UsersServices {
   }
 
   @Override
-  public Optional<Users> findByNameOrEmail(String name, String email) {
-    return Optional.empty();
+  @Transactional
+  public UsersDto update(UsersDto usersDto) {
+    Users user = usersRepository.findById(usersDto.getId())
+      .orElseThrow(() -> new EntityNotFoundException(
+        "Utilisateur introuvable (id=" + usersDto.getId() + ")"));
+
+    user.setEmail(usersDto.getEmail());
+
+    if (usersDto.getPassword() != null && !usersDto.getPassword().isBlank()) {
+      user.setPassword(bCryptPasswordEncoder.encode(usersDto.getPassword()));
+    }
+
+    user.setUpdatedAt(LocalDateTime.now());
+
+    Users updated = usersRepository.save(user);
+    return userMapper.toDTO(updated);
   }
 
-  @Override
-  public boolean existsByEmail(String email) {
-    return false;
-  }
-
-  @Override
-  public boolean existsByName(String name) {
-    return false;
-  }
 }

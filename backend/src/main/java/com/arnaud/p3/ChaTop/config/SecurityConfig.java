@@ -23,7 +23,6 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
   private final AuthEntryPointJwt unauthorizedHandler;
-  private final UserDetailsServiceImpl userDetailsService;
   private final AuthTokenFilter authTokenFilter;
 
   @Bean
@@ -43,7 +42,7 @@ public class SecurityConfig {
       .exceptionHandling(e -> e.authenticationEntryPoint(unauthorizedHandler))
       .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
       .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/api/users").permitAll()
+        .requestMatchers("/api/auth/signin", "/v3/api-docs/**", "/swagger-ui/**", "/api/users","api/users/save","api/auth/me").permitAll()
         .anyRequest().authenticated()
       )
       .authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
