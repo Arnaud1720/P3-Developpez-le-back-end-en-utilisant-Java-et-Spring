@@ -21,23 +21,6 @@ public class UsersController {
   }
 
 
-  @PostMapping
-  public ResponseEntity<UsersDto> createUtilisateur(
-    @RequestBody @Valid UsersDto dto) {
-
-    UsersDto created = service.save(dto);
-
-    URI location = ServletUriComponentsBuilder
-      .fromCurrentRequest()
-      .path("/{id}")
-      .buildAndExpand(created.getId())
-      .toUri();
-
-    return ResponseEntity
-      .created(location)
-      .body(created);
-  }
-
   @GetMapping("/{id}")
     public ResponseEntity<UsersDto> getUserById(@PathVariable int id) {
         UsersDto user = service.findById(id);
@@ -58,6 +41,15 @@ public class UsersController {
   public ResponseEntity<Void> delete(@PathVariable int id) {
     service.deleteById(id);
     return ResponseEntity.noContent().build();
+  }
+  @PutMapping("/{id}")
+  public ResponseEntity<UsersDto> updateUtilisateur(
+    @PathVariable Integer id,
+    @RequestBody @Valid UsersDto dto
+  ) {
+    dto.setId(id);
+    UsersDto updated = service.update(dto);
+    return ResponseEntity.ok(updated);
   }
 
 }
