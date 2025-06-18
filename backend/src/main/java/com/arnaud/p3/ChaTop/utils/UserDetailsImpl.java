@@ -1,37 +1,42 @@
 package com.arnaud.p3.ChaTop.utils;
 
 import com.arnaud.p3.ChaTop.entity.Users;
+import com.arnaud.p3.ChaTop.entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserDetailsImpl implements UserDetails {
+
   private Integer id;
-  private String username;    // on utilisera l’email comme username
+  private String username; // l'email est utilisé comme identifiant
   private String password;
-  private Collection<? extends GrantedAuthority> authorities;
+  private Set<Role> roles;
 
   public static UserDetailsImpl build(Users user) {
     return new UserDetailsImpl(
       user.getId(),
       user.getEmail(),
       user.getPassword(),
-      user.getRoles().stream()
-        .map(r -> (GrantedAuthority) r::getName)
-        .toList()
+      user.getRoles()
     );
   }
 
-
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return authorities;
+    return roles.stream()
+      .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
+      .collect(Collectors.toSet());
   }
 
   @Override
@@ -46,21 +51,21 @@ public class UserDetailsImpl implements UserDetails {
 
   @Override
   public boolean isAccountNonExpired() {
-    return UserDetails.super.isAccountNonExpired();
+    return true;
   }
 
   @Override
   public boolean isAccountNonLocked() {
-    return UserDetails.super.isAccountNonLocked();
+    return true;
   }
 
   @Override
   public boolean isCredentialsNonExpired() {
-    return UserDetails.super.isCredentialsNonExpired();
+    return true;
   }
 
   @Override
   public boolean isEnabled() {
-    return UserDetails.super.isEnabled();
+    return true;
   }
 }

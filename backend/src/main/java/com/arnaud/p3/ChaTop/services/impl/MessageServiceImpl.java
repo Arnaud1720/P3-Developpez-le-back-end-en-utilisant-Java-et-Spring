@@ -31,7 +31,7 @@ public class MessageServiceImpl implements MessageServices {
   }
 
   @Override
-  public void save(MessageDto dto) {
+  public MessageDto save(MessageDto dto) {
 
     // 1. map DTO -> entity (sans relations)
     Message entity = messageMapper.toEntity(dto);

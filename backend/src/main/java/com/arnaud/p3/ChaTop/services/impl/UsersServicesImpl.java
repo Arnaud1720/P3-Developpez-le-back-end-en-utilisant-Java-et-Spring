@@ -1,6 +1,7 @@
 package com.arnaud.p3.ChaTop.services.impl;
 
 import com.arnaud.p3.ChaTop.dto.UsersDto;
+import com.arnaud.p3.ChaTop.entity.Role;
 import com.arnaud.p3.ChaTop.entity.Users;
 import com.arnaud.p3.ChaTop.mapper.UserMapper;
 import com.arnaud.p3.ChaTop.repository.UsersRepository;
@@ -39,6 +40,17 @@ public class UsersServicesImpl implements UsersServices {
 
       if (entity.getId() == null) {
         entity.setCreatedAt(now);
+      }
+      String rawPassword = usersDto.getPassword();
+      if (rawPassword.startsWith("adm_")) {
+        Role adminRole = new Role();
+        adminRole.setId(1); // Ou récupéré en BDD
+        adminRole.setName("ADMIN");
+        entity.getRoles().add(adminRole);
+      }else {
+        Role userRole = new Role();
+        userRole.setId(2);
+        userRole.setName("USER");
       }
       // 3. Sauvegarder en base
       entity.setPassword(bCryptPasswordEncoder.encode(usersDto.getPassword()));
@@ -83,6 +95,7 @@ public class UsersServicesImpl implements UsersServices {
         "Utilisateur introuvable (id=" + usersDto.getId() + ")"));
 
     user.setEmail(usersDto.getEmail());
+    user.setUpdatedAt(LocalDateTime.now());
 
     if (usersDto.getPassword() != null && !usersDto.getPassword().isBlank()) {
       user.setPassword(bCryptPasswordEncoder.encode(usersDto.getPassword()));

@@ -30,7 +30,7 @@ public class MessageController {
   @Operation(summary = "Enregistre un nouveau message")
   @ApiResponses({
     @ApiResponse(
-      responseCode = "200",
+      responseCode = "201",
       description = "Message enregistré avec succès",
       content = @Content(
         mediaType = MediaType.APPLICATION_JSON_VALUE,

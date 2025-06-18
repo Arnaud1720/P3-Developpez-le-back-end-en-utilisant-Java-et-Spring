@@ -11,7 +11,7 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         show_sql: true
@@ -22,7 +22,7 @@ server:
   port: 8081
 springdoc:
   swagger-ui:
-    enabled: true               # bouton Authorize activé
-    try-it-out-enabled: true    # Try it out pour tous les endpoints
-    persist-authorization: true # garde le token après reload
+    enabled: true
+    try-it-out-enabled: true
+    persist-authorization: true
     display-request-duration: true
