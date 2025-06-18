@@ -1,4 +1,4 @@
-CREATE TABLE `USERS` (
+CREATE TABLE `users` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
   `email` varchar(255),
   `name` varchar(255),
@@ -7,7 +7,7 @@ CREATE TABLE `USERS` (
   `updated_at` timestamp
 );
 
-CREATE TABLE `RENTALS` (
+CREATE TABLE `rentals` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
   `name` varchar(255),
   `surface` numeric,
@@ -19,7 +19,7 @@ CREATE TABLE `RENTALS` (
   `updated_at` timestamp
 );
 
-CREATE TABLE `MESSAGES` (
+CREATE TABLE `messages` (
   `id` integer PRIMARY KEY AUTO_INCREMENT,
   `rental_id` integer,
   `user_id` integer,
@@ -27,11 +27,24 @@ CREATE TABLE `MESSAGES` (
   `created_at` timestamp,
   `updated_at` timestamp
 );
+CREATE TABLE `role` (
+  `id` integer PRIMARY KEY AUTO_INCREMENT,
+  `name` varchar(50) NOT NULL UNIQUE
+);
+CREATE TABLE `user_roles` (
+                            `user_id` INT NOT NULL,
+                            `role_id` INT NOT NULL,
+                            PRIMARY KEY (`user_id`, `role_id`),
+                            FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE,
+                            FOREIGN KEY (`role_id`) REFERENCES `role` (`id`) ON DELETE CASCADE
+);
 
-CREATE UNIQUE INDEX `USERS_index` ON `USERS` (`email`);
+INSERT INTO `role` (`name`) VALUES ('ADMIN'), ('USER');
 
-ALTER TABLE `RENTALS` ADD FOREIGN KEY (`owner_id`) REFERENCES `USERS` (`id`);
+CREATE UNIQUE INDEX `USERS_index` ON `users` (`email`);
 
-ALTER TABLE `MESSAGES` ADD FOREIGN KEY (`user_id`) REFERENCES `USERS` (`id`);
+ALTER TABLE `rentals` ADD FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`);
 
-ALTER TABLE `MESSAGES` ADD FOREIGN KEY (`rental_id`) REFERENCES `RENTALS` (`id`);
+ALTER TABLE `messages` ADD FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
+
+ALTER TABLE `messages` ADD FOREIGN KEY (`rental_id`) REFERENCES `rentals` (`id`);
