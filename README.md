@@ -165,7 +165,7 @@ docker-compose down
 * **Swagger UI :**
   `http://localhost:8080/swagger-ui/index.html`
 * **Postman :** importer `resources/postman/ChaTop.postman_collection.json`
-
+depuis le dossier postman pour charger les configurations de l'API 
 ---
 
 ##  Commandes utiles
