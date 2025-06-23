@@ -1,12 +1,12 @@
 package com.arnaud.p3.ChaTop.utils;
 
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
@@ -28,18 +28,24 @@ public class JwtUtils {
   }
 
   public String generateJwtToken(Authentication authentication) {
-    String email = ((UserDetailsImpl) authentication.getPrincipal()).getUsername();
-    Date now = new Date();
+    UserDetailsImpl user = (UserDetailsImpl) authentication.getPrincipal();
+    String email     = user.getUsername();
+    String name = user.getName();
+    Date now    = new Date();
     Date expiry = new Date(now.getTime() + jwtExpirationMs);
 
+    // 1) On prépare les claims
+    Claims claims = Jwts.claims().setSubject(email);
+    claims.put("Name", name);
+
+    // 2) On génère le token avec ces claims
     return Jwts.builder()
-      .setSubject(email)
+      .setClaims(claims)
       .setIssuedAt(now)
       .setExpiration(expiry)
-      .signWith(key)
+      .signWith(key)              // votre clé déjà initialisée
       .compact();
   }
-
   public String getEmailFromJwtToken(String token) {
     return Jwts.parserBuilder()
       .setSigningKey(key)

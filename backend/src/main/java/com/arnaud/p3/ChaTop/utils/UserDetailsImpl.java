@@ -22,13 +22,14 @@ public class UserDetailsImpl implements UserDetails {
   private String username; // l'email est utilisé comme identifiant
   private String password;
   private Set<Role> roles;
-
+  private String name;
   public static UserDetailsImpl build(Users user) {
     return new UserDetailsImpl(
       user.getId(),
       user.getEmail(),
       user.getPassword(),
-      user.getRoles()
+      user.getRoles(),
+      user.getName()
     );
   }
 

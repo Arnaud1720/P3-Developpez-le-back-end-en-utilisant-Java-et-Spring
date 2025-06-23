@@ -1,7 +1,8 @@
   package com.arnaud.p3.ChaTop.controller;
 
   import com.arnaud.p3.ChaTop.dto.UsersDto;
-  import com.arnaud.p3.ChaTop.exception.ErrorDto;
+  import com.arnaud.p3.ChaTop.dto.out.UserOutputDto;
+  import com.arnaud.p3.ChaTop.exception.ErrorResponse;
   import com.arnaud.p3.ChaTop.services.UsersServices;
   import io.swagger.v3.oas.annotations.Operation;
   import io.swagger.v3.oas.annotations.media.Content;
@@ -13,9 +14,6 @@
   import org.springframework.http.ResponseEntity;
   import org.springframework.security.access.prepost.PreAuthorize;
   import org.springframework.web.bind.annotation.*;
-  import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
-  import java.net.URI;
 
   @RestController
   @RequestMapping("/api/users")
@@ -35,7 +33,7 @@
       @ApiResponse(responseCode = "404", description = "Utilisateur introuvable",
         content = @Content(
           mediaType = "application/json",
-          schema = @Schema(implementation = ErrorDto.class),
+          schema = @Schema(implementation = ErrorResponse.class),
           examples = @ExampleObject(
             name = "NotFoundExample",
             value = "{\"code\":\"USER_NOT_FOUND\",\"message\":\"L’utilisateur avec cet ID n’existe pas\"}"
@@ -43,8 +41,8 @@
         )
       )
     })
-    public ResponseEntity<UsersDto> getUserById(@PathVariable int id) {
-      UsersDto user = service.findById(id);
+    public ResponseEntity<UserOutputDto> getUserById(@PathVariable int id) {
+      UserOutputDto user = service.findById(id);
       return ResponseEntity.ok(user);
     }
 
@@ -55,7 +53,7 @@
       @ApiResponse(responseCode = "404", description = "Utilisateur introuvable",
         content = @Content(
           mediaType = "application/json",
-          schema = @Schema(implementation = ErrorDto.class),
+          schema = @Schema(implementation = ErrorResponse.class),
           examples = @ExampleObject(
             name = "NotFoundExample",
             value = "{\"code\":\"USER_NOT_FOUND\",\"message\":\"Aucun utilisateur trouvé avec ce nom\"}"
@@ -75,7 +73,7 @@
       @ApiResponse(responseCode = "404", description = "Utilisateur introuvable",
         content = @Content(
           mediaType = "application/json",
-          schema = @Schema(implementation = ErrorDto.class),
+          schema = @Schema(implementation = ErrorResponse.class),
           examples = @ExampleObject(
             name = "NotFoundExample",
             value = "{\"code\":\"USER_NOT_FOUND\",\"message\":\"Aucun utilisateur trouvé avec cet email\"}"
@@ -96,7 +94,7 @@
       @ApiResponse(responseCode = "401", description = "Vous devez être admin pour supprimer un utilisateur",
         content = @Content(
           mediaType = "application/json",
-          schema = @Schema(implementation = ErrorDto.class),
+          schema = @Schema(implementation = ErrorResponse.class),
           examples = @ExampleObject(
             name = "UnauthorizedExample",
             value = "{\"code\":\"UNAUTHORIZED\",\"message\":\"Vous devez être administrateur pour effectuer cette action\"}"
@@ -106,7 +104,7 @@
       @ApiResponse(responseCode = "404", description = "Utilisateur introuvable",
         content = @Content(
           mediaType = "application/json",
-          schema = @Schema(implementation = ErrorDto.class),
+          schema = @Schema(implementation = ErrorResponse.class),
           examples = @ExampleObject(
             name = "NotFoundExample",
             value = "{\"code\":\"USER_NOT_FOUND\",\"message\":\"Impossible de supprimer : utilisateur introuvable\"}"
@@ -126,7 +124,7 @@
       @ApiResponse(responseCode = "400", description = "Requête invalide ou champs manquants",
         content = @Content(
           mediaType = "application/json",
-          schema = @Schema(implementation = ErrorDto.class),
+          schema = @Schema(implementation = ErrorResponse.class),
           examples = @ExampleObject(
             name = "BadRequestExample",
             value = "{\"code\":\"INVALID_DATA\",\"message\":\"Les champs fournis sont invalides\"}"
@@ -136,7 +134,7 @@
       @ApiResponse(responseCode = "404", description = "Utilisateur introuvable",
         content = @Content(
           mediaType = "application/json",
-          schema = @Schema(implementation = ErrorDto.class),
+          schema = @Schema(implementation = ErrorResponse.class),
           examples = @ExampleObject(
             name = "NotFoundExample",
             value = "{\"code\":\"USER_NOT_FOUND\",\"message\":\"Impossible de mettre à jour : utilisateur inexistant\"}"

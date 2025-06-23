@@ -3,6 +3,8 @@ package com.arnaud.p3.ChaTop.config;
 import com.arnaud.p3.ChaTop.auth.AuthEntryPointJwt;
 import com.arnaud.p3.ChaTop.auth.AuthTokenFilter;
 import com.arnaud.p3.ChaTop.utils.UserDetailsServiceImpl;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -25,6 +28,7 @@ public class SecurityConfig {
   private final AuthEntryPointJwt unauthorizedHandler;
   private final AuthTokenFilter authTokenFilter;
 
+
   @Bean
   public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
     return cfg.getAuthenticationManager();
@@ -36,22 +40,21 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
     http
+      // On ne filtre QUE /api/**
+      .securityMatcher("/api/**")
       .csrf(AbstractHttpConfigurer::disable)
       .exceptionHandling(e -> e.authenticationEntryPoint(unauthorizedHandler))
       .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/users/delete/**").hasRole("ADMIN")
+      .authorizeHttpRequests(auth ->
+        auth
+          .requestMatchers("/api/auth/**", "/api/users/**").permitAll()
+          .requestMatchers("/api/users/delete/**").hasRole("ADMIN")
+          .anyRequest().authenticated()
       )
-      .authorizeHttpRequests(auth -> auth
-        .requestMatchers("/api/auth/**", "/v3/api-docs/**", "/swagger-ui/**", "/api/users/**").permitAll()
-        .anyRequest().authenticated()
-      )
-
-      .authenticationManager(authenticationManager(http.getSharedObject(AuthenticationConfiguration.class)))
       .addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
 
     return http.build();
   }
-}
+  }

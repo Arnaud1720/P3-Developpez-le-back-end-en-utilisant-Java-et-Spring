@@ -4,7 +4,7 @@ import com.arnaud.p3.ChaTop.auth.JwtResponse;
 import com.arnaud.p3.ChaTop.auth.LoginRequest;
 import com.arnaud.p3.ChaTop.dto.UserInfoResponse;
 import com.arnaud.p3.ChaTop.dto.UsersDto;
-import com.arnaud.p3.ChaTop.exception.ErrorDto;
+import com.arnaud.p3.ChaTop.exception.ErrorResponse;
 import com.arnaud.p3.ChaTop.services.UsersServices;
 import com.arnaud.p3.ChaTop.utils.JwtUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +14,6 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -30,13 +29,18 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/auth")
-@RequiredArgsConstructor
 
 public class AuthController {
 
   private final AuthenticationManager authenticationManager;
   private final JwtUtils jwtUtils;
   private final UsersServices service;
+
+  public AuthController(AuthenticationManager authenticationManager, JwtUtils jwtUtils, UsersServices service) {
+    this.authenticationManager = authenticationManager;
+    this.jwtUtils = jwtUtils;
+    this.service = service;
+  }
 
   @Operation(summary = "Authentifie un utilisateur et retourne un JWT")
   @ApiResponses({
@@ -57,7 +61,7 @@ public class AuthController {
       description = "Requête mal formée (DTO invalid)",
       content = @Content(
         mediaType = "application/json",
-        schema = @Schema(implementation = ErrorDto.class),
+        schema = @Schema(implementation = ErrorResponse.class),
         examples = @ExampleObject(
           name  = "BadRequestExample",
           value = "{\"code\":\"VALIDATION_ERROR\",\"message\":\"Le champ password est obligatoire\"}"
@@ -69,7 +73,7 @@ public class AuthController {
       description = "Identifiants invalides",
       content = @Content(
         mediaType = "application/json",
-        schema = @Schema(implementation = ErrorDto.class),
+        schema = @Schema(implementation = ErrorResponse.class),
         examples = @ExampleObject(
           name  = "UnauthorizedExample",
           value = "{\"code\":\"UNAUTHORIZED\",\"message\":\"Email ou mot de passe incorrect\"}"
@@ -77,7 +81,7 @@ public class AuthController {
       )
     )
   })
-  @PostMapping("/signin")
+  @PostMapping("/login")
   public ResponseEntity<JwtResponse> authenticateUser(
     @Valid @RequestBody LoginRequest loginRequest
   ) {
@@ -120,7 +124,7 @@ public class AuthController {
       description = "Données invalides",
       content = @Content(
         mediaType = "application/json",
-        schema = @Schema(implementation = ErrorDto.class),
+        schema = @Schema(implementation = ErrorResponse.class),
         examples = @ExampleObject(
           name  = "BadRequestExample",
           value = "{\"code\":\"VALIDATION_ERROR\",\"message\":\"Le champ email est obligatoire\"}"
@@ -132,7 +136,7 @@ public class AuthController {
       description = "Conflit, l’utilisateur existe déjà",
       content = @Content(
         mediaType = "application/json",
-        schema = @Schema(implementation = ErrorDto.class),
+        schema = @Schema(implementation = ErrorResponse.class),
         examples = @ExampleObject(
           name  = "ConflictExample",
           value = "{\"code\":\"USER_EXISTS\",\"message\":\"Le nom d’utilisateur est déjà pris\"}"
@@ -157,7 +161,6 @@ public class AuthController {
       .body(created);
   }
 
-
   @GetMapping("/me")
   public ResponseEntity<UserInfoResponse> getCurrentUser(
     @RequestHeader("Authorization") String authHeader
@@ -170,10 +173,11 @@ public class AuthController {
       return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     }
 
-    String email     = jwtUtils.getEmailFromJwtToken(token);
-    String firstName = jwtUtils.getClaimFromJwtToken(token, "email");
+    String email = jwtUtils.getEmailFromJwtToken(token);
 
-    return ResponseEntity.ok(new UserInfoResponse(email));
+    String name  = jwtUtils.getClaimFromJwtToken(token, "Name");
+
+    return ResponseEntity.ok(new UserInfoResponse(email, name));
   }
 
 

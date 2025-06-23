@@ -1,8 +1,7 @@
 package com.arnaud.p3.ChaTop.controller;
 
 import com.arnaud.p3.ChaTop.dto.RentalsDto;
-import com.arnaud.p3.ChaTop.dto.UsersDto;
-import com.arnaud.p3.ChaTop.exception.ErrorDto;
+import com.arnaud.p3.ChaTop.exception.ErrorResponse;
 import com.arnaud.p3.ChaTop.services.RentalServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -50,7 +49,7 @@ public class RentalsController {
       description = "Données de location invalides",
       content = @Content(
         mediaType = MediaType.APPLICATION_JSON_VALUE,
-        schema = @Schema(implementation = ErrorDto.class),
+        schema = @Schema(implementation = ErrorResponse.class),
         examples = @ExampleObject(
           name = "BadRequestExample",
           value = "{ \"code\": \"VALIDATION_ERROR\", \"message\": \"Le champ startDate est obligatoire\" }"
@@ -108,7 +107,7 @@ public class RentalsController {
       description = "Location non trouvée",
       content = @Content(
         mediaType = MediaType.APPLICATION_JSON_VALUE,
-        schema = @Schema(implementation = ErrorDto.class),
+        schema = @Schema(implementation = ErrorResponse.class),
         examples = @ExampleObject(
           name = "NotFoundExample",
           value = "{ \"code\": \"NOT_FOUND\", \"message\": \"Rental with ID 999 not found\" }"
@@ -133,7 +132,7 @@ public class RentalsController {
       description = "Location non trouvée",
       content = @Content(
         mediaType = MediaType.APPLICATION_JSON_VALUE,
-        schema = @Schema(implementation = ErrorDto.class),
+        schema = @Schema(implementation = ErrorResponse.class),
         examples = @ExampleObject(
           name = "NotFoundDeleteExample",
           value = "{ \"code\": \"NOT_FOUND\", \"message\": \"Rental with ID 999 not found\" }"

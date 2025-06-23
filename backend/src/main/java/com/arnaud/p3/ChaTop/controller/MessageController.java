@@ -1,7 +1,7 @@
 package com.arnaud.p3.ChaTop.controller;
 
 import com.arnaud.p3.ChaTop.dto.MessageDto;
-import com.arnaud.p3.ChaTop.exception.ErrorDto;
+import com.arnaud.p3.ChaTop.exception.ErrorResponse;
 import com.arnaud.p3.ChaTop.services.MessageServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,7 +42,7 @@ public class MessageController {
       description = "Erreur serveur lors de l'enregistrement du message",
       content = @Content(
         mediaType = MediaType.APPLICATION_JSON_VALUE,
-        schema = @Schema(implementation = ErrorDto.class)
+        schema = @Schema(implementation = ErrorResponse.class)
       )
     )
   })

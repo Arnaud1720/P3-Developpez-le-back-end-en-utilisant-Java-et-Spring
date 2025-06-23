@@ -58,7 +58,7 @@ public class MessageServiceImpl implements MessageServices {
     Message saved = messageRepository.save(entity)  ;
 
     // 5. renvoyer la représentation à jour
-    messageMapper.toDTO(saved);
+   return messageMapper.toDTO(saved);
   }
 
 

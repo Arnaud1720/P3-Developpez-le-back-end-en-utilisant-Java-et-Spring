@@ -1,11 +1,15 @@
 package com.arnaud.p3.ChaTop.exception;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
 @Data
-public class ErrorDto {
+@AllArgsConstructor
+@NoArgsConstructor
+public class ErrorResponse {
   private LocalDateTime timestamp;
   private int status;
   private String error;

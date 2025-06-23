@@ -24,6 +24,10 @@ public class AuthTokenFilter  extends OncePerRequestFilter {
   private final JwtUtils jwtUtils;
   private final UserDetailsServiceImpl uds;
 
+
+
+
+
   @Override
   protected void doFilterInternal(@NonNull HttpServletRequest req,
                                   @NonNull HttpServletResponse res,
@@ -62,9 +66,10 @@ public class AuthTokenFilter  extends OncePerRequestFilter {
   @Override
   protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
     String path = request.getServletPath();
-    return path.equals("/api/auth/signin")
-      || path.startsWith("/v3/api-docs")
+    // on ignore le filtre pour Swagger UI et l'API-docs
+    return path.startsWith("/v3/api-docs")
       || path.startsWith("/swagger-ui")
-      || path.equals("/api/users");
+      || path.startsWith("/swagger-ui.html")
+      || path.startsWith("/webjars");
   }
 }
