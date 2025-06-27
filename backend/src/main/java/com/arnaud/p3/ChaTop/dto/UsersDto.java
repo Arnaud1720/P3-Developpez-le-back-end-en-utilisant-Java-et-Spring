@@ -1,5 +1,6 @@
 package com.arnaud.p3.ChaTop.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.*;
 
@@ -22,6 +23,7 @@ public class UsersDto {
   private String name;
 
   @Schema(description = "Mot de passe (en clair pour la création)", example = "s3cr3tP@ss", required = true)
+  @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
   private String password;
 
   @Schema(description = "Date de création", accessMode = Schema.AccessMode.READ_ONLY)

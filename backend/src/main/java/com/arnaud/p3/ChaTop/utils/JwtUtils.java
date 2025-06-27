@@ -16,8 +16,6 @@ import java.util.Date;
 @Slf4j
 @Component
 public class JwtUtils {
-  // Durée de vie du token (1 h)
-  private final long jwtExpirationMs = 3_600_000L;
 
   // Clé secrète HS512 (générée automatiquement, 512 bits)
   private SecretKey key;
@@ -32,6 +30,8 @@ public class JwtUtils {
     String email     = user.getUsername();
     String name = user.getName();
     Date now    = new Date();
+    // Durée de vie du token (1 h)
+    long jwtExpirationMs = 3_600_000L;
     Date expiry = new Date(now.getTime() + jwtExpirationMs);
 
     // 1) On prépare les claims

@@ -94,6 +94,8 @@ public class UsersServicesImpl implements UsersServices {
         "Utilisateur introuvable (id=" + usersDto.getId() + ")"));
 
     user.setEmail(usersDto.getEmail());
+    user.setName(usersDto.getName());
+    user.setPassword(bCryptPasswordEncoder.encode(usersDto.getPassword()));
     user.setUpdatedAt(LocalDateTime.now());
 
     if (usersDto.getPassword() != null && !usersDto.getPassword().isBlank()) {

@@ -19,9 +19,9 @@ public class AuthEntryPointJwt implements AuthenticationEntryPoint {
                        HttpServletResponse response,
                        AuthenticationException authException)
     throws IOException, ServletException {
-    log.warn("Unauthorized error: {}", authException.getMessage());
+    log.error("Unauthorized error: {}", authException.getMessage());
     response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-    response.setHeader("X-Error-Message", "Vous devez etre administrateur pour effectuer cette action");
+    response.setHeader("X-Error-Message", "Vous devez etre authentifier pour effectuer cette action");
     response.setContentType("application/json");
     response.getWriter().write("{\"code\":\"UNAUTHORIZED\",\"message\":\"Vous devez être administrateur pour effectuer cette action\"}");
 

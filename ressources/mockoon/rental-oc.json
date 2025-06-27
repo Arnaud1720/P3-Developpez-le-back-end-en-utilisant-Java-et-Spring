@@ -15,9 +15,9 @@
       "responses": [
         {
           "uuid": "28fc815b-1c32-431f-8c4b-cdf017a9ce04",
-          "body": "{}",
+          "body": "{} ",
           "latency": 0,
-          "statusCode": 400,
+          "statusCode": 201,
           "label": "",
           "headers": [],
           "filePath": "",
@@ -266,7 +266,7 @@
       "responses": [
         {
           "uuid": "5a37f124-6126-4ccd-92c0-04d94cdb636b",
-          "body": "{}",
+          "body": "{\n  \n}",
           "latency": 0,
           "statusCode": 200,
           "label": "",

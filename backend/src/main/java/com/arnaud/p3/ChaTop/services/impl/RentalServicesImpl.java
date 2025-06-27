@@ -41,9 +41,11 @@ public class RentalServicesImpl implements RentalServices {
       .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,"Owner not found for id " + ownerId));
     rental.setOwner(owner);
 
+
     LocalDateTime now = LocalDateTime.now();
     if (rental.getId() == null) {
       rental.setCreatedAt(now);
+
     }
     rental.setUpdatedAt(now);
 
@@ -87,6 +89,7 @@ public class RentalServicesImpl implements RentalServices {
       Users owner = usersRepository.findById(dto.getOwnerId())
         .orElseThrow(() -> new ResponseStatusException(HttpStatus.CONFLICT,"User not found for id " + dto.getOwnerId()));
       rental.setOwner(owner);
+
     }
 
     rental.setUpdatedAt(LocalDateTime.now());
